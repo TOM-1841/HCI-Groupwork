@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BIUST CMRS - Campus Maintenance Reporting</title>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.1/dist/cdn.min.js"></script>
+<style>
+:root{--bg:#f3f3f3;--card:#fff;--tx:#111;--mu:#555;--bd:#d9d9d9;--pr:#e36c0a;--onpr:#111;--ac:#0b7bb5;--ok:#111;--okb:#cfeaf8;--wn:#111;--wnb:#fde1cb;--er:#111;--erb:#f9b886;--inb:#dff1fb;--hd:#fff;--br:#4fc3f0;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0c0c0c;--card:#1a1a1a;--tx:#fff;--mu:#bdbdbd;--bd:#333;--pr:#f58b45;--ac:#4fc3f0;--okb:#0f3347;--ok:#fff;--wnb:#4a2a10;--wn:#fff;--er:#fff;--erb:#a8500f;--inb:#12303f;--hd:#111}}
+:root[data-theme="dark"]{--bg:#0c0c0c;--card:#1a1a1a;--tx:#fff;--mu:#bdbdbd;--bd:#333;--pr:#f58b45;--ac:#4fc3f0;--okb:#0f3347;--ok:#fff;--wnb:#4a2a10;--wn:#fff;--er:#fff;--erb:#a8500f;--inb:#12303f;--hd:#111}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}[x-cloak]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+button,select,input,textarea{font:inherit;min-height:44px;color:var(--tx)}
+header{background:var(--hd);color:var(--tx);position:sticky;top:env(safe-area-inset-top,0px);z-index:5;border-bottom:1px solid var(--bd)}header:after{content:"";display:block;height:6px;background:linear-gradient(90deg,var(--br) 0 30%,var(--pr) 30% 100%)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.logo{background:#fff;border-radius:8px;padding:2px 6px;display:flex;flex:none}.logo img{height:44px;width:auto;display:block}
+.in{max-width:560px;margin:0 auto;padding:0 14px}.wide .in{max-width:980px}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0}
+h1{font-size:18px;margin:0}h2{font-size:20px;margin:6px 0 2px}h3{font-size:16px;margin:0}
+.mu{color:var(--mu);font-size:14px}
+header select{background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:0 8px;width:auto}
+.bell{background:var(--card);border:1px solid var(--bd);border-radius:8px;color:var(--tx);padding:0 12px;cursor:pointer}
+main{padding:14px 0 90px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;margin:0 0 10px}
+.row{cursor:pointer;display:block;width:100%;text-align:left}.row:hover{border-color:var(--ac)}
+.fl{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{display:inline-flex;gap:4px;align-items:center;padding:2px 10px;border-radius:99px;font-size:13px;font-weight:600;background:var(--inb);color:var(--ac)}
+.chip.ok{background:var(--okb);color:var(--ok)}.chip.wn{background:var(--wnb);color:var(--wn)}.chip.er{background:var(--erb);color:var(--er)}
+.btn{background:var(--pr);color:var(--onpr);border:0;border-radius:8px;padding:0 16px;font-weight:600;cursor:pointer}
+.btn.s{background:transparent;color:var(--tx);border:1px solid var(--bd)}.btn.w{width:100%;margin-top:8px}
+label{display:block;font-weight:600;font-size:14px;margin:12px 0 4px}
+input,select,textarea{width:100%;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:8px 10px}
+:focus-visible{outline:3px solid var(--ac);outline-offset:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:12px}
+.tile{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:10px}.tile b{font-size:26px;display:block}
+.tl{margin:6px 0 0;padding-left:18px;font-size:14px}.tl li{margin:3px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:8px 6px;border-bottom:1px solid var(--bd)}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom,0px)}
+nav .in{display:flex;justify-content:space-around}nav button{background:none;border:0;padding:6px 14px;cursor:pointer;font-size:13px;font-weight:600}
+nav button[aria-current="true"]{border-top:3px solid var(--pr);padding-top:3px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(76px + env(safe-area-inset-bottom,0px));background:var(--tx);color:var(--bg);padding:10px 16px;border-radius:8px;z-index:9;max-width:90%}
+.role{display:flex;align-items:center;gap:14px;border-left:6px solid var(--pr);padding:16px}.role:nth-of-type(2){border-left-color:var(--br)}.role b{font-size:18px}.ri{font-size:28px;flex:none}
+.err{color:var(--er);font-size:14px;margin-top:4px}
+</style>
+</head>
+<body x-data="app()" x-cloak :class="user.role==='admin'&&view!=='welcome'?'wide':''">
+<header><div class="in bar">
+<div class="brand"><span class="logo"><img src="logo.png" alt="BIUST: Botswana International University of Science and Technology"></span><div><h1>Maintenance Reporting</h1><div class="mu" x-text="view==='welcome'?'Choose your role to continue':user.name"></div></div></div>
+<div class="fl" x-show="view!=='welcome'"><button class="bell" @click="go('alerts')" aria-label="Alerts">&#128276; <span x-show="unread()" x-text="unread()"></span></button>
+<button class="btn s" style="background:var(--card)" @click="go('welcome')">Change role</button></div>
+</div></header>
+
+<main><div class="in">
+
+<!-- WELCOME: ROLE CHOICE -->
+<section x-show="view==='welcome'">
+<h2>Report and track campus maintenance</h2>
+<p class="mu" style="margin:0 0 14px">Sign in to the system as:b</p>
+<button class="card row role" @click="setRole('student')"><span class="ri" aria-hidden="true">&#127891;</span><span><b>Student</b><span class="mu" style="display:block">Report a fault and follow it until it is fixed.</span></span></button>
+<button class="card row role" @click="setRole('officer')"><span class="ri" aria-hidden="true">&#128295;</span><span><b>Maintenance Officer</b><span class="mu" style="display:block">See your assigned jobs and update their progress.</span></span></button>
+<button class="card row role" @click="setRole('admin')"><span class="ri" aria-hidden="true">&#128202;</span><span><b>Admin</b><span class="mu" style="display:block">Assign work, set priorities and see what is pending or done.</span></span></button>
+</section>
+
+<!-- STUDENT HOME / OFFICER TASKS / ADMIN OVERVIEW -->
+<section x-show="view==='home'">
+<template x-if="user.role==='student'"><div>
+<div class="fl"><div><h2>My Reports</h2><p class="mu" style="margin:0">Status of every fault you reported.</p></div><button class="btn" @click="go('report')">+ Report an issue</button></div>
+<p class="mu" x-show="!list().length">No reports yet. Tap Report an issue to start.</p>
+</div></template>
+<template x-if="user.role==='officer'"><div><h2>My Tasks</h2><p class="mu" style="margin:0 0 8px">Highest priority first. Tap a job to update it.</p></div></template>
+<template x-if="user.role==='admin'"><div>
+<h2>Overview</h2>
+<div class="grid">
+<div class="tile"><b x-text="count('Pending')"></b>Pending</div>
+<div class="tile"><b x-text="count('In progress')"></b>In progress</div>
+<div class="tile"><b x-text="count('On hold')"></b>Blocked or on hold</div>
+<div class="tile"><b x-text="count('Done')"></b>Attended to</div>
+<div class="tile"><b x-text="count('Overdue')" style="color:var(--er)"></b>&#9888; Overdue</div></div>
+<div class="card" x-show="partsList().length"><h3>Parts requests awaiting approval</h3>
+<template x-for="i in partsList()" :key="i.id"><div class="fl" style="margin-top:8px"><span x-text="i.id+': '+i.parts"></span>
+<span><button class="btn" @click="decide(i,true)">Approve</button> <button class="btn s" @click="decide(i,false)">Defer</button></span></div></template></div>
+<div class="card"><h3>Officers</h3><table><tr><th>Officer</th><th>Attended to</th><th>Open</th></tr>
+<template x-for="o in officers" :key="o"><tr><td x-text="o"></td><td x-text="attended(o)"></td><td x-text="openFor(o)"></td></tr></template></table></div>
+<label for="f">Show issues</label><select id="f" x-model="f"><option>All</option><option>Pending</option><option>In progress</option><option>On hold</option><option>Done</option><option>Overdue</option></select>
+<div style="height:10px"></div></div></template>
+
+<template x-for="i in list()" :key="i.id">
+<button class="card row" @click="open(i)">
+<div class="fl"><b x-text="i.id"></b><span class="chip" :class="tone(i.status)"><span x-text="icon(i.status)"></span><span x-text="i.status"></span></span></div>
+<div class="fl" style="margin-top:4px"><span x-text="i.cat"></span><span class="chip" :class="i.pri==='P1'?'er':i.pri==='P2'?'wn':''" x-text="i.pri+' '+PN[i.pri]"></span></div>
+<div class="mu" x-text="i.desc"></div>
+<div class="fl mu" style="margin-top:6px"><span x-text="loc(i)"></span>
+<span x-show="isOver(i)" style="color:var(--er);font-weight:700">&#9888; Overdue</span>
+<span x-show="i.officer" x-text="(['Resolved','Closed'].includes(i.status)?'Attended by ':'Officer: ')+i.officer"></span></div>
+</button></template>
+</section>
+
+<!-- REPORT FORM -->
+<section x-show="view==='report'" class="card">
+<h2>Report an issue</h2><p class="mu">Fields marked * are required.</p>
+<label for="c">Category *</label><select id="c" x-model="n.cat"><option value="">Choose a category</option><template x-for="c in cats"><option x-text="c"></option></template></select>
+<label for="b">Block number *</label><select id="b" x-model="n.block"><option value="">Choose a block</option><template x-for="b in blocks"><option x-text="b"></option></template></select>
+<label for="t">Where is it? *</label><select id="t" x-model="n.where"><option value="room">My room</option><option>Corridor</option><option>Bathroom</option><option>Laundry</option><option>Kitchen</option></select>
+<template x-if="n.where==='room'"><div><label for="r">Room number *</label><input id="r" inputmode="numeric" x-model="n.room" placeholder="e.g. 14"></div></template>
+<label for="d">Describe the problem *</label><textarea id="d" rows="3" x-model="n.desc" placeholder="Where in the room, and what is happening?"></textarea>
+<label for="u">Urgency</label><select id="u" x-model="n.urg"><option>Low</option><option>Medium</option><option>High</option><option value="Emergency">Emergency (safety hazard)</option></select>
+<label for="p">Photo (optional)</label><input id="p" type="file" accept="image/*">
+<label for="a">Room access *</label><select id="a" x-model="n.acc"><option value="away">Officer may enter while I am away</option><option value="present">I must be present</option></select>
+<template x-if="n.acc==='present'"><div><label for="w">Preferred times</label><input id="w" x-model="n.times" placeholder="e.g. weekdays after 16:00"></div></template>
+<p class="err" x-text="err" x-show="err"></p>
+<div class="fl"><button class="btn s" style="flex:1" @click="go('home')">Cancel</button><button class="btn" style="flex:1" @click="submit()">Submit issue</button></div>
+</section>
+
+<!-- DETAIL -->
+<section x-show="view==='detail' && sel" class="card">
+<template x-if="sel"><div>
+<div class="fl"><div><b x-text="sel.id"></b><h2 style="margin:0" x-text="sel.cat"></h2></div><span class="chip" :class="tone(sel.status)"><span x-text="icon(sel.status)"></span><span x-text="sel.status"></span></span></div>
+<p><span class="chip" x-text="sel.pri+' '+PN[sel.pri]"></span> <span x-show="isOver(sel)" style="color:var(--er);font-weight:700">&#9888; Overdue</span></p>
+<p><b>Location:</b> <span x-text="loc(sel)"></span><br><b>Problem:</b> <span x-text="sel.desc"></span><br>
+<span x-show="user.role!=='student'"><b>Room access:</b> <span x-text="sel.acc==='away'?'Officer may enter while student is away':'Student must be present'+(sel.times?' ('+sel.times+')':'')"></span><br></span>
+<span x-show="sel.officer"><b x-text="['Resolved','Closed'].includes(sel.status)?'Attended by:':'Assigned officer:'"></b> <span x-text="sel.officer"></span></span></p>
+<h3>Timeline</h3><ul class="tl"><template x-for="t in sel.tl"><li x-text="t"></li></template></ul>
+
+<!-- Admin -->
+<template x-if="user.role==='admin'"><div>
+<template x-if="['Submitted','Reopened'].includes(sel.status)"><div><label for="o">Assign to officer</label><select id="o" x-model="pick"><option value="">Choose an officer</option><template x-for="o in officers"><option x-text="o"></option></template></select>
+<button class="btn w" @click="assign()">Assign</button></div></template>
+<template x-if="sel.status==='Awaiting Parts'"><div class="fl" style="margin-top:8px"><span x-text="'Parts: '+sel.parts"></span><span><button class="btn" @click="decide(sel,true)">Approve</button> <button class="btn s" @click="decide(sel,false)">Defer</button></span></div></template>
+<label for="pp">Change priority</label><select id="pp" x-model="np"><option value="">Keep current</option><option value="P1">P1 Critical</option><option value="P2">P2 High</option><option value="P3">P3 Medium</option><option value="P4">P4 Low</option></select>
+<input aria-label="Reason for change" x-model="inp" placeholder="Reason (required)" style="margin-top:6px"><button class="btn s w" @click="setPri()">Save priority</button>
+</div></template>
+
+<!-- Officer -->
+<template x-if="user.role==='officer'"><div>
+<template x-if="['Assigned','Reopened','Access Failed'].includes(sel.status)"><button class="btn w" @click="move(sel,'In Progress','Work started')">Start work</button></template>
+<template x-if="sel.status==='In Progress'"><div>
+<label for="n2">Note, reason or part needed *</label><input id="n2" x-model="inp" placeholder="What was done, why access failed, or which part">
+<button class="btn w" @click="done()">Mark resolved</button>
+<button class="btn s w" @click="fail()">Access failed (room locked)</button>
+<button class="btn s w" @click="parts()">Request parts</button></div></template>
+</div></template>
+
+<!-- Student -->
+<template x-if="user.role==='student' && sel.status==='Resolved'"><div class="card" style="background:var(--okb)"><b>Is it fixed?</b>
+<div class="fl" style="margin-top:8px"><button class="btn" style="flex:1" @click="move(sel,'Closed','Student confirmed fixed')">Yes, close it</button><button class="btn s" style="flex:1" @click="move(sel,'Reopened','Student reopened: not fixed')">No, reopen</button></div></div></template>
+
+<p class="err" x-show="err" x-text="err"></p>
+<button class="btn s w" @click="go('home')">Back</button></div></template>
+</section>
+
+<!-- ALERTS -->
+<section x-show="view==='alerts'"><h2>Alerts</h2><p class="mu" x-show="!mine().length">No alerts yet.</p>
+<template x-for="a in mine()"><div class="card" x-text="a.m"></div></template></section>
+
+</div></main>
+
+<nav x-show="view!=='welcome'"><div class="in">
+<button :aria-current="view==='home'" @click="go('home')">&#127968; Home</button>
+<button x-show="user.role==='student'" :aria-current="view==='report'" @click="go('report')">&#10133; Report</button>
+<button :aria-current="view==='alerts'" @click="go('alerts')">&#128276; Alerts</button>
+</div></nav>
+<div class="toast" x-show="msg" x-text="msg" role="status"></div>
+
+<script>
+function app(){
+const PN={P1:'Critical',P2:'High',P3:'Medium',P4:'Low'},UP={Emergency:'P1',High:'P2',Medium:'P3',Low:'P4'},TG={P1:24,P2:72,P3:168,P4:336};
+const S=(id,cat,block,room,desc,urg,status,age,o={})=>({id,cat,block,room,desc,urg,pri:UP[urg],status,age,acc:'away',times:'',by:'Kago',officer:'',parts:'',tl:['Submitted by student'],...o});
+return{PN,view:'welcome',sel:null,f:'All',msg:'',err:'',inp:'',pick:'',np:'',n:{cat:'',block:'',where:'room',room:'',desc:'',urg:'Medium',acc:'away',times:''},
+user:{name:'Kago Molefe (Block C, Room 14)',role:'student'},
+officers:['John (Plumbing)','Mpho (Electrical)','Neo (Carpentry)'],
+cats:['Carpentry','Plumbing','Electrical','Wi-Fi/Network','Furniture','Cleaning/Pest control','Other'],blocks:['Block A','Block B','Block C','Block D'],
+notes:[{to:'student',m:'MNT-0127 is In Progress: John (Plumbing) has started work.',r:false}],
+issues:[
+S('MNT-0127','Plumbing','Block C','14','Tap leaking in the bathroom basin.','Medium','In Progress',20,{officer:'John (Plumbing)',acc:'present',times:'weekdays after 16:00',tl:['Submitted by student','Assigned to John (Plumbing) by Admin','In Progress: Work started']}),
+S('MNT-0120','Carpentry','Block C','14','Door handle is loose.','Low','Resolved',50,{officer:'Neo (Carpentry)',tl:['Submitted by student','Assigned to Neo (Carpentry) by Admin','Resolved: Handle refitted']}),
+S('MNT-0126','Electrical','Block B','105','Socket sparking next to the bed.','Emergency','Submitted',3,{by:'Lesedi'}),
+S('MNT-0124','Plumbing','Block D','212','Shower drain is blocked.','High','Assigned',80,{by:'Tumelo',officer:'John (Plumbing)',tl:['Submitted by student','Assigned to John (Plumbing) by Admin']}),
+S('MNT-0119','Furniture','Block A','33','Bed frame is broken.','Medium','Awaiting Parts',100,{by:'Naledi',officer:'Neo (Carpentry)',parts:'Bed frame bolts x6',tl:['Submitted by student','Assigned to Neo (Carpentry) by Admin','Awaiting Parts: Bed frame bolts x6']}),
+S('MNT-0121','Carpentry','Block A','07','Window latch will not close.','Medium','Access Failed',60,{by:'Onkabetse',officer:'Neo (Carpentry)',acc:'present',tl:['Submitted by student','Assigned to Neo (Carpentry) by Admin','Access Failed: room locked, student away']}),
+S('MNT-0115','Plumbing','Block B','21','Cistern keeps running.','Low','Closed',200,{by:'Boitumelo',officer:'John (Plumbing)',tl:['Submitted by student','Resolved: Valve replaced','Closed: Student confirmed']})],
+get ST(){return{Pending:['Submitted','Reopened'],'In progress':['Assigned','In Progress'],'On hold':['Awaiting Parts','On Hold (Funding)','Access Failed'],Done:['Resolved','Closed']}},
+isOver(i){return !['Resolved','Closed'].includes(i.status)&&i.age>TG[i.pri]},
+loc(i){return i.block+' / '+(i.room?'Room '+i.room:i.where)},
+icon(s){return({Submitted:'\u23F3',Assigned:'\uD83D\uDD27','In Progress':'\u2699\uFE0F','Awaiting Parts':'\uD83D\uDCE6','On Hold (Funding)':'\u23F8\uFE0F','Access Failed':'\uD83D\uDEAA',Resolved:'\u2705',Closed:'\uD83D\uDD12',Reopened:'\uD83D\uDD04'})[s]||'\uD83D\uDCCB'},
+tone(s){return['Resolved','Closed'].includes(s)?'ok':['Awaiting Parts','On Hold (Funding)','Access Failed'].includes(s)?'wn':s==='Reopened'?'er':''},
+count(k){return this.issues.filter(i=>k==='Overdue'?this.isOver(i):this.ST[k].includes(i.status)).length},
+attended(o){return this.issues.filter(i=>i.officer===o&&this.ST.Done.includes(i.status)).length},
+openFor(o){return this.issues.filter(i=>i.officer===o&&!this.ST.Done.includes(i.status)).length},
+partsList(){return this.issues.filter(i=>i.status==='Awaiting Parts')},
+list(){const r=this.user.role;let l=this.issues.filter(i=>r==='student'?i.by==='Kago':r==='officer'?i.officer===this.user.name:this.f==='All'||(this.f==='Overdue'?this.isOver(i):this.ST[this.f].includes(i.status)));
+if(r==='officer')l=l.filter(i=>!this.ST.Done.includes(i.status));return l.sort((a,b)=>a.pri.localeCompare(b.pri)||b.age-a.age)},
+mine(){return this.notes.filter(a=>a.to===this.user.role)},unread(){return this.mine().filter(a=>!a.r).length},
+go(v){this.view=v;this.err='';this.inp='';if(v==='alerts')this.mine().forEach(a=>a.r=true)},
+open(i){this.sel=i;this.go('detail')},
+say(m){this.msg=m;setTimeout(()=>this.msg='',3500)},
+note(to,m){this.notes.unshift({to,m,r:false})},
+setRole(r){this.user=r==='student'?{name:'Kago Molefe (Block C, Room 14)',role:r}:r==='officer'?{name:'John (Plumbing)',role:r}:{name:'Admin',role:r};this.go('home');this.say('Signed in as '+r)},
+submit(){const n=this.n;if(!n.cat||!n.block||!n.desc.trim()||(n.where==='room'&&!n.room.trim())){this.err='Choose a category and block, add a room number (or common area) and describe the problem.';return}
+const id='MNT-0'+(128+this.issues.length-7);const i=S(id,n.cat,n.block,n.where==='room'?n.room:'',n.desc,n.urg,'Submitted',0,{where:n.where,acc:n.acc,times:n.times});
+this.issues.unshift(i);this.note('admin',id+' reported: '+n.cat+', '+this.loc(i)+' ('+i.pri+')');this.say(id+' received. Priority '+i.pri+' '+PN[i.pri]+'.');
+this.n={cat:'',block:'',where:'room',room:'',desc:'',urg:'Medium',acc:'away',times:''};this.go('home')},
+move(i,s,t){i.status=s;i.tl.push(s+': '+t+' ('+this.user.name.split(' (')[0]+')');this.note('student',i.id+' is now '+s+'.');if(s==='Reopened'||s==='Closed')this.note('admin',i.id+' '+s.toLowerCase()+'.');this.say(i.id+' updated to '+s);this.go('home')},
+assign(){if(!this.pick){this.err='Choose an officer first.';return}this.sel.officer=this.pick;this.move(this.sel,'Assigned','Assigned to '+this.pick+' by Admin');this.note('officer',this.sel.id+' assigned to you.');this.pick=''},
+setPri(){if(!this.np||!this.inp.trim()){this.err='Choose a priority and give a reason.';return}this.sel.tl.push('Priority changed to '+this.np+': '+this.inp+' (Admin)');this.sel.pri=this.np;this.say('Priority set to '+this.np);this.np='';this.go('home')},
+need(){if(!this.inp.trim()){this.err='Add a note first.';return false}return true},
+done(){if(this.need())this.move(this.sel,'Resolved',this.inp)},
+fail(){if(this.need())this.move(this.sel,'Access Failed',this.inp)},
+parts(){if(this.need()){this.sel.parts=this.inp;this.note('admin',this.sel.id+' needs parts: '+this.inp);this.move(this.sel,'Awaiting Parts',this.inp)}},
+decide(i,ok){i.status=ok?'In Progress':'On Hold (Funding)';i.tl.push((ok?'Parts approved':'Parts deferred, on hold for funding')+' (Admin)');this.note('student',i.id+(ok?': parts approved.':' is on hold until funding is available.'));this.say(ok?'Parts approved':'Deferred: on hold (funding)')}
+}}
+</script>
+</body>
+</html>
